@@ -8,6 +8,7 @@ Then, from the root, run
 
 ```sh
 > npm install
+> npm install -g gulp http-server
 ```
 
 After all the dependencies are installed, run

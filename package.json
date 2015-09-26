@@ -22,8 +22,8 @@
   "homepage": "https://github.com/UB-CSE/Celestia",
   "devDependencies": {
     "browserify": "^11.1.0",
+    "del": "^2.0.2",
     "gulp": "^3.9.0",
-    "gulp-clean": "^0.3.1",
     "gulp-jshint": "^1.11.2",
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.4.1",
@@ -31,5 +31,6 @@
     "three": "^0.72.0",
     "vinyl-source-stream": "^1.1.0",
     "wzrd": "^1.3.1"
-  }
+  },
+  "dependencies": {}
 }

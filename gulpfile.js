@@ -2,7 +2,7 @@
 // -------------------------
 var gulp   = require('gulp');
 var jshint = require('gulp-jshint');
-var clean  = require('gulp-clean');
+var del    = require('del');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
@@ -35,8 +35,7 @@ gulp.task('jshint', function() {
 
 // Delete the build directory
 gulp.task('clean', function() {
-    return gulp.src(bases.build)
-        .pipe(clean());
+    return del([bases.build]);
 });
 
 
@@ -82,7 +81,7 @@ gulp.task('watch', function() {
     gulp.watch(bases.src + '**/*', ['copy']);
 });
 
-gulp.task('build', ['clean', 'uglify', 'copy']);
+gulp.task('build', ['clean', 'copy']);
 
 // Define the default task as a sequence of the above tasks
 gulp.task('default', ['build']);
