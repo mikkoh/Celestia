@@ -16,7 +16,7 @@ var bases = {
 
 var paths = {
     html: ['index.html'],
-    images: ['data/images/**/*.png'],
+    images: ['data/images/**/*'],
     script: ['js/main.js'],
     styles: ['css/**/*.css'],
     extras: ['favicon.ico']
@@ -42,16 +42,16 @@ gulp.task('clean', function() {
 // Build tasks
 gulp.task('browserify', function() {
     var b = browserify(bases.src + paths.script, {
-        debug: false
+        debug: true
     });
     return b.bundle()
         .pipe(source('app.browserified.js'))
-        .pipe(gulp.dest(bases.build + 'js/'))
+        .pipe(gulp.dest(bases.build + 'js/'));
 });
 
 gulp.task('uglify', ['browserify'], function() {
     return gulp.src(bases.build + 'js/app.browserified.js')
-        .pipe(uglify())
+        // .pipe(uglify())
         .pipe(rename('app.min.js'))
         .pipe(gulp.dest(bases.build + 'js/'));
 });
@@ -66,6 +66,10 @@ gulp.task('copy', ['uglify'], function() {
     // Copy styles
     gulp.src(paths.styles, { cwd: bases.src })
         .pipe(gulp.dest(bases.build + 'css/'));
+
+    // Copy data
+    gulp.src(paths.images, { cwd: bases.src })
+        .pipe(gulp.dest(bases.build + 'data/images'));
 
     // Copy extras
     gulp.src(paths.extras, { cwd: bases.src })

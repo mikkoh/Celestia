@@ -1,3 +1,7 @@
-var THREE = require('three');
+var canvasEl = require('./canvas.js');
 
-console.log("test");
+window.onload = init;
+
+function init() {
+    document.body.appendChild(canvasEl);
+}
