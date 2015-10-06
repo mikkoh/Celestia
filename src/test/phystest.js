@@ -11,6 +11,8 @@ var SCREEN = {
 };
 
 
+var bodies = [];
+
 
 // Methods
 
@@ -26,7 +28,7 @@ function init(argument) {
         FAR = 60000;
 
     camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR);
-    camera.position.set(0, 150, 400);
+    camera.position.set(0, 150, 700);
     camera.lookAt(scene.position);
     scene.add(camera);
     renderer = new THREE.WebGLRenderer({
@@ -42,8 +44,7 @@ function init(argument) {
     scene.add(light);
 
 
-    var body1 = new Body(50);
-    scene.add(body1.mesh);
+    addBodies();
 
 
     container.appendChild(renderer.domElement);
@@ -63,7 +64,9 @@ function animate() {
 }
 
 function update() {
-
+    for (var i = bodies.length - 1; i >= 0; --i) {
+        bodies[i].update(bodies);
+    }
 }
 
 function render() {
@@ -78,5 +81,32 @@ function onWindowResize() {
     camera.aspect = SCREEN.w / SCREEN.h;
     camera.updateProjectionMatrix();
 }
+
+
+function addBodies() {
+    var numBodies = 3;
+
+    var initPos = {
+        x: 0,
+        y: 0,
+        z: 0
+    };
+
+    var physics = {
+        mass: 1
+    };
+
+    for (var i = 0, body = null; i < numBodies; i++) {
+        initPos.x = Math.random() * 250;
+        initPos.y = Math.random() * 250;
+        initPos.z = Math.random() * 250;
+
+        body = new Body(25, initPos, physics);
+
+        scene.add(body.mesh);
+        bodies.push(body);
+    }
+}
+
 
 window.onload = init;
