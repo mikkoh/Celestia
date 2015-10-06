@@ -32,6 +32,5 @@
     "three": "^0.72.0",
     "vinyl-source-stream": "^1.1.0",
     "wzrd": "^1.3.1"
-  },
-  "dependencies": {}
+  }
 }

@@ -1,3 +1,7 @@
+if (!require('./support.js')) {
+    return;
+}
+
 var canvasEl = require('./canvas.js');
 
 window.onload = init;

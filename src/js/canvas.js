@@ -1,14 +1,17 @@
 // Dependencies
 var THREE = require('three');
-var OrbitControls = require('three-orbit-controls')(THREE);
+require('./lib/FlyControls.js')(THREE);
+
 
 // File-scoped variables
-var scene, camera, renderer;
+var scene, camera, renderer, controls;
 
 var SCREEN = {
     w: window.innerWidth,
     h: window.innerHeight
 };
+
+var clock, delta;
 
 
 var parent, moon;
@@ -20,9 +23,7 @@ var parent, moon;
 function init(argument) {
     var container = document.createElement('div');
 
-
     scene = new THREE.Scene();
-
 
     var VIEW_ANGLE = 45,
         ASPECT = SCREEN.w / SCREEN.h,
@@ -38,7 +39,13 @@ function init(argument) {
     });
     renderer.setSize(SCREEN.w, SCREEN.h);
 
-    controls = new OrbitControls(camera, renderer.domElement);
+    clock = new THREE.Clock();
+
+    controls = new THREE.FlyControls(camera, container);
+    controls.movementSpeed = 600;
+    controls.rollSpeed = Math.PI / 6;
+    controls.dragToLook = true;
+
 
     var light = new THREE.PointLight(0xCC9999);
     light.position.set(0, 250, 0);
@@ -46,16 +53,12 @@ function init(argument) {
 
 
     var sphereGeometry = new THREE.SphereGeometry(50, 32, 16);
-    var moonTexture = THREE.ImageUtils.loadTexture('../data/images/moonmap.jpg');
-    // var bumpTexture = THREE.ImageUtils.loadTexture('../data/images/moonbump.jpg');
+    var moonTexture = THREE.ImageUtils.loadTexture('../data/images/moon.jpg');
     var moonMaterial = new THREE.MeshLambertMaterial({
         map: moonTexture
-        // bumpMap: bumpTexture,
-        // bumpScale: 0.002
     });
     moon = new THREE.Mesh(sphereGeometry, moonMaterial);
     moon.position.set(150, 50, -50);
-    // scene.add(moon);
 
     parent = new THREE.Object3D();
     scene.add(parent);
@@ -96,8 +99,8 @@ function init(argument) {
     for (var i = 0; i < 6; i++)
         imageURLs.push(imagePrefix + directions[i] + imageSuffix);
     var textureCube = THREE.ImageUtils.loadTextureCube(imageURLs);
-    var shader = THREE.ShaderLib["cube"];
-    shader.uniforms["tCube"].value = textureCube;
+    var shader = THREE.ShaderLib.cube;
+    shader.uniforms.tCube.value = textureCube;
     var skyMaterial = new THREE.ShaderMaterial({
         fragmentShader: shader.fragmentShader,
         vertexShader: shader.vertexShader,
@@ -107,7 +110,6 @@ function init(argument) {
     });
     var skyBox = new THREE.Mesh(skyGeometry, skyMaterial);
     scene.add(skyBox);
-
 
 
     container.appendChild(renderer.domElement);
@@ -127,16 +129,17 @@ function animate() {
 }
 
 function update() {
-    controls.update();
-
     moon.rotation.y += 0.01;
     (moon.rotation.y >= Math.PI * 2) && (moon.rotation.y = 0);
 
     parent.rotation.y += 0.01;
     (parent.rotation.y >= Math.PI * 2) && (parent.rotation.y = 0);
+
+    controls.update(delta);
 }
 
 function render() {
+    delta = clock.getDelta();
     renderer.render(scene, camera);
 }
 
