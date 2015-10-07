@@ -17,6 +17,7 @@ function Body(radius, pos, physics) {
         v: new THREE.Vector3(), // Velocity
         c: this.mesh.position // Coordinates
     };
+
 }
 
 Body.prototype.update = function(bodies) {
@@ -27,5 +28,62 @@ Body.prototype.update = function(bodies) {
 
     // update position
 };
+
+/*
+Body.prototype.mass_val = function(F, a)
+{
+    private var MASS; 
+    this.F = F; 
+    this.a = a; 
+    return MASS = (F / a); 
+}; 
+
+Body.prototype.acceleration_val = function(F, m)
+{
+    private var ACCELERATION; 
+    this.F = F; 
+    this.m = m; 
+    return ACCELERATION = (F / m); 
+}; 
+
+Body.prototype.force_val = function(m, a)
+{
+    private var FORCE; 
+    this.m = m; 
+    this.a = a; 
+    return FORCE = (m * a); 
+}; 
+
+Body.prototype.Force_xyz = function(m, ax, ay, az)
+{
+    this.force_xyz =
+    {
+        Fx_net: new THREE.Vector3(),
+        Fy_net: new THREE.Vector3(),
+        Fz_net: new THREE.Vector3()
+    }; 
+
+    this.forceX = function()
+    {   
+        this.force_xyz.Fx_net =  (this.m * this.ax); 
+    }; 
+
+    this.forceY = function()
+    {
+        this.force_xyz.Fy_net = (this.m * this.ay); 
+    }
+
+    this.forceZ = function()
+    {
+        this.force_xyz.Fz_net = (this.m * this.az); 
+    }
+}; 
+
+Body.prototype.Acceleration_xyz = function(m, Fx, Fy, Fz)
+{
+
+
+}; 
+*/
 
 module.exports = Body;
