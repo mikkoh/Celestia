@@ -1,9 +1,11 @@
 // Dependencies
 var THREE = require('three');
 var Body = require('./body.js');
+require('./FlyControls.js')(THREE);
 
 // File-scoped variables
-var scene, camera, renderer;
+var scene, camera, renderer, controls;
+var clock, delta;
 
 var SCREEN = {
     w: window.innerWidth,
@@ -37,9 +39,16 @@ function init(argument) {
     renderer.setSize(SCREEN.w, SCREEN.h);
     renderer.setClearColor(0x555555);
 
+    clock = new THREE.Clock();
+
+    controls = new THREE.FlyControls(camera, container);
+    controls.movementSpeed = 600;
+    controls.rollSpeed = Math.PI / 6;
+    controls.dragToLook = true;
+
 
     // var light = new THREE.AmbientLight(0x404040); // soft white light
-    var light = new THREE.PointLight(0xCC9999);
+    var light = new THREE.PointLight(0xCC4444);
     light.position.set(0, 250, 0);
     scene.add(light);
 
@@ -52,24 +61,32 @@ function init(argument) {
     window.addEventListener('resize', onWindowResize);
     onWindowResize();
 
-    animate();
-
     document.body.appendChild(container);
+
+    animate();
 }
 
 function animate() {
-    requestAnimationFrame(animate);
+    window.requestAnimationFrame(animate);
     render();
     update();
 }
 
 function update() {
     for (var i = bodies.length - 1; i >= 0; --i) {
-        bodies[i].update(bodies);
+        bodies[i].update(delta, bodies);
+
+        if (bodies[i].remove) {
+            scene.remove(bodies[i].mesh);
+            bodies.splice(i, 1);
+        }
     }
+
+    controls.update(delta);
 }
 
 function render() {
+    delta = clock.getDelta();
     renderer.render(scene, camera);
 }
 
@@ -84,24 +101,26 @@ function onWindowResize() {
 
 
 function addBodies() {
-    var numBodies = 3;
-
-    var initPos = {
-        x: 0,
-        y: 0,
-        z: 0
-    };
+    var numBodies = 2;
 
     var physics = {
-        mass: 1
+        mass: 0,
+        velocity: new THREE.Vector3(),
+        coordinates: new THREE.Vector3()
     };
 
     for (var i = 0, body = null; i < numBodies; i++) {
-        initPos.x = Math.random() * 250;
-        initPos.y = Math.random() * 250;
-        initPos.z = Math.random() * 250;
+        physics.mass = Math.random() * 10E12;
 
-        body = new Body(25, initPos, physics);
+        physics.coordinates.setX(Math.random() * 100 - 50);
+        physics.coordinates.setY(Math.random() * 100 - 50);
+        physics.coordinates.setZ(Math.random() * 100 - 50);
+
+        // physics.velocity.setX(Math.random() * 10 - 5);
+        // physics.velocity.setY(Math.random() * 10 - 5);
+        // physics.velocity.setZ(Math.random() * 10 - 5);
+
+        body = new Body(Math.random() * 10, physics);
 
         scene.add(body.mesh);
         bodies.push(body);
