@@ -4,9 +4,10 @@
   "description": "3D Einsteinian gravity simulator.",
   "main": "src/js/main.js",
   "scripts": {
-    "start": "cd build && http-server",
+    "install": "gulp",
+    "start": "http-server build/ -o",
     "debug": "cd src && wzrd js/main.js:js/app.min.js",
-    "test": "cd src/test && wzrd phystest.js"
+    "test": "wzrd src/test/phystest.js"
   },
   "repository": {
     "type": "git",
@@ -33,5 +34,7 @@
     "vinyl-source-stream": "^1.1.0",
     "wzrd": "^1.3.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "three-orbit-controls": "^71.1.0"
+  }
 }
